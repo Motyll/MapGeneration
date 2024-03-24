@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/styleUI.uss?fileID=7433441132597879392&amp;guid=26ad44b57ada7eb499e7097320897fd4&amp;type=3#styleUI" />
+    <ui:VisualElement name="TopBar" style="flex-grow: 1; height: 100px; width: 1206px;" />
+    <ui:VisualElement name="RightList" style="flex-grow: 1; height: 476px; width: 200px; position: relative; flex-direction: column; align-items: auto; align-self: flex-end;">
+        <ui:ListView focusable="true" show-border="false" style="height: 476px; width: 200px; align-self: auto; align-items: auto;" />
+    </ui:VisualElement>
+</ui:UXML>

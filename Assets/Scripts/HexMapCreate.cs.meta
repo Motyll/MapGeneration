@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 6ef8818ee82c87341bfb0c0bafc3800c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - grassHex: {fileID: 51012261818279202, guid: 68517df4e070b9943b1ae9088bc33f2f, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

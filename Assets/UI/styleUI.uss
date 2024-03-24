@@ -1,0 +1,7 @@
+.decision {
+    opacity: 1;
+    display: flex;
+    visibility: visible;
+    overflow: visible;
+    align-items: stretch;
+}
