@@ -12,4 +12,7 @@ public class MapSettings : ScriptableObject{
     public int forestAmmount;
     public float forestScale;
     public int forestOctaves;
+    public float mountainAmmount;
+    public float mountainScale;
+    public int mountainOctaves;
 }

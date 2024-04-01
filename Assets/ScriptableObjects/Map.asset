@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a237c8484a3aa549b3a5701ce5ea58b, type: 3}
   m_Name: Map
   m_EditorClassIdentifier: 
-  radius: 200
+  radius: 100
   seed: 2147483647
-  height: 0.9
+  height: 0.5
   scale: 1
-  waterLevel: -20
+  waterLevel: -10
   waterScale: 0
   waterOctaves: 8
-  forestAmmount: 1
-  forestScale: 4
+  forestAmmount: 2
+  forestScale: 8
   forestOctaves: 8
+  mountainAmmount: 0.085
+  mountainScale: 3
+  mountainOctaves: 2

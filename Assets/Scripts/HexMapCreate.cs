@@ -24,21 +24,23 @@ public class HexMapCreate : MonoBehaviour
         float [,] population =  NoiseGenerator.Instance.getNoiseMap(89216308 / 2, 10000, mapStats.scale);
         float [,] forest = NoiseGenerator.Instance.getForestMap(89216308 / 3);
         float [,] water = NoiseGenerator.Instance.getWaterMap(89216308 / 4);
+        float [,] ridge = NoiseGenerator.Instance.getRigdeMap(mapStats.seed);
 
         for(int r = -mapRadius; r <= mapRadius; r++){
             for(int q = -mapRadius;  q <= mapRadius; q++){
                 if(-r + q <= mapRadius && r - q <= mapRadius){
-                    Debug.Log(water[r + mapRadius, q + mapRadius]);
+                    Debug.Log(ridge[r + mapRadius, q + mapRadius]);
                     CreateTile(r, q, 
-                    (int)(water[r + mapRadius, q + mapRadius]), 
+                    (int)water[r + mapRadius, q + mapRadius], 
                     (int)population[r + mapRadius, q + mapRadius],
-                    (int)forest[r + mapRadius, q + mapRadius]);
+                    (int)forest[r + mapRadius, q + mapRadius],
+                    ridge[r + mapRadius, q + mapRadius]);
                 }
             }
         }
     }
 
-    public void CreateTile(int r, int q, int elevation, int population, int forest){
+    public void CreateTile(int r, int q, int elevation, int population, int forest, float ridge){
         //Create Tile
         GameObject tile = Instantiate(hex, GetPositionForHex(new Vector2Int(r, q)), Quaternion.identity);
         tile.name = $"Hex[{r},{q}]";
@@ -52,7 +54,7 @@ public class HexMapCreate : MonoBehaviour
         
         tile.GetComponent<TileLogic>().stats.population = population;
 
-        TerrainType terrainType = SetTerrainType(r, q, elevation, population, forest);
+        TerrainType terrainType = SetTerrainType(elevation, population, forest, ridge);
         tile.GetComponent<TileLogic>().stats.terrain = terrainType;
         
         if(terrainType == TerrainType.DeepWater || terrainType == TerrainType.ShallowWater) 
@@ -60,24 +62,23 @@ public class HexMapCreate : MonoBehaviour
         
         //Geting terrain type
         GameObject terrain = Instantiate(GetHexStyle(terrainType), tile.transform);
-        terrain.transform.position += new Vector3(0, 0, elevation > 0 ? mapStats.height * elevation/1000 - 0.4f : 0);
+        if (terrainType == TerrainType.Mountains)
+            terrain.transform.position += new Vector3(0, 0, elevation > 0 ? mapStats.height * elevation/1000 - 0.4f + 1 : 1);
+        else 
+            terrain.transform.position += new Vector3(0, 0, elevation > 0 ? mapStats.height * elevation/1000 - 0.4f : 0);
     }
 
-    public TerrainType SetTerrainType(int r, int q, int elevation, int population, int forest){
+    public TerrainType SetTerrainType(int elevation, int population, int forest, float ridge){
         
         if(elevation < -200){
             return TerrainType.DeepWater;
         } else if(elevation <= 0){
             return TerrainType.ShallowWater;
-        } else if (elevation < 100000){
+        } else if (ridge < mapStats.mountainAmmount){
             if(population > 9000) return TerrainType.SmallCityRuins;
             if(forest > 0) return TerrainType.Forest;
             return TerrainType.Grassland;
-        } else if (elevation < 1500){
-            if(population > 9000) return TerrainType.SmallCityRuins;
-            if(forest > 0) return TerrainType.ForestHills;
-            return TerrainType.Hills;
-        }else{
+        } else {
             return TerrainType.Mountains;
         }
     }

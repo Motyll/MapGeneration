@@ -90,7 +90,7 @@ public class CameraController : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime);
         transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * movementTime);
         
-        newZoom = newZoom.z >= 10 ? newZoom : new Vector3 (0, -10, 10);
+        newZoom = newZoom.z >= 50 ? newZoom : new Vector3 (0, -50, 50);
         cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, newZoom, Time.deltaTime * movementTime);;
     }
 }

@@ -82,7 +82,31 @@ public class NoiseGenerator : MonoBehaviour{
                     float xCoord = (float)x / mapStats.radius * 2 * scale + xOffset;
                     float yCoord = (float)y / mapStats.radius * 2 * scale + yOffset;
                     float val = (Mathf.PerlinNoise(xCoord, yCoord) - 0.5f) * 20;
-                    map[x, y] += val + mapStats.forestAmmount;
+                    map[x, y] += (val + mapStats.forestAmmount) * octaveImpact;
+                }
+            }
+            scale *= 2;
+            octaveImpact /= 2;
+        }
+        
+        return map;
+    }
+
+    public float[,] getRigdeMap(int seed){
+        float [,] map = new float[mapStats.radius * 2 + 1, mapStats.radius * 2 + 1];
+        int xOffset = seed % 2000;
+        int yOffset = seed / 1000 % 2000;
+        float scale = mapStats.mountainScale;
+
+        float octaveImpact = 1f;
+        for(int i = 0; i < mapStats.mountainOctaves; i++){
+            for(int x = 0; x < mapStats.radius * 2 + 1; x++){
+                for(int y = 0; y < mapStats.radius * 2 + 1; y++){
+                    float xCoord = (float)x / mapStats.radius * 2 * scale + xOffset;
+                    float yCoord = (float)y / mapStats.radius * 2 * scale + yOffset;
+                    float val = Mathf.PerlinNoise(xCoord, yCoord) - 0.5f;
+                    val = -Mathf.Abs(val);
+                    map[x, y] += (val + 0.1f) * octaveImpact;
                 }
             }
             scale *= 2;
