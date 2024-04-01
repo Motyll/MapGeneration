@@ -21,16 +21,16 @@ public class HexMapCreate : MonoBehaviour
     }
 
     void LayoutGrid(){
-        float [,] elevation =  NoiseGenerator.Instance.getNoiseMap(89216308, 2500, mapStats.scale);
         float [,] population =  NoiseGenerator.Instance.getNoiseMap(89216308 / 2, 10000, mapStats.scale);
-        float [,] forest = NoiseGenerator.Instance.getNoiseMap(89216308 / 3, 100, mapStats.forestScale);
+        float [,] forest = NoiseGenerator.Instance.getForestMap(89216308 / 3);
+        float [,] water = NoiseGenerator.Instance.getWaterMap(89216308 / 4);
 
         for(int r = -mapRadius; r <= mapRadius; r++){
             for(int q = -mapRadius;  q <= mapRadius; q++){
                 if(-r + q <= mapRadius && r - q <= mapRadius){
-                    Debug.Log(elevation[r + mapRadius, q + mapRadius]);
+                    Debug.Log(water[r + mapRadius, q + mapRadius]);
                     CreateTile(r, q, 
-                    (int)elevation[r + mapRadius, q + mapRadius] - 500, 
+                    (int)(water[r + mapRadius, q + mapRadius]), 
                     (int)population[r + mapRadius, q + mapRadius],
                     (int)forest[r + mapRadius, q + mapRadius]);
                 }
@@ -60,22 +60,22 @@ public class HexMapCreate : MonoBehaviour
         
         //Geting terrain type
         GameObject terrain = Instantiate(GetHexStyle(terrainType), tile.transform);
-        terrain.transform.position += new Vector3(0, 0, ((float)elevation / 2500 - 0.5f) * mapStats.heightScale);
+        terrain.transform.position += new Vector3(0, 0, elevation > 0 ? mapStats.height * elevation/1000 - 0.4f : 0);
     }
 
     public TerrainType SetTerrainType(int r, int q, int elevation, int population, int forest){
         
-        if(elevation < -300){
+        if(elevation < -200){
             return TerrainType.DeepWater;
-        } else if(elevation < 0){
+        } else if(elevation <= 0){
             return TerrainType.ShallowWater;
-        } else if (elevation < 1000){
+        } else if (elevation < 100000){
             if(population > 9000) return TerrainType.SmallCityRuins;
-            if(forest < mapStats.forestAmmount) return TerrainType.Forest;
+            if(forest > 0) return TerrainType.Forest;
             return TerrainType.Grassland;
         } else if (elevation < 1500){
-            if(population > 10000) return TerrainType.SmallCityRuins;
-            if(forest < mapStats.forestAmmount) return TerrainType.ForestHills;
+            if(population > 9000) return TerrainType.SmallCityRuins;
+            if(forest > 0) return TerrainType.ForestHills;
             return TerrainType.Hills;
         }else{
             return TerrainType.Mountains;
@@ -97,7 +97,6 @@ public class HexMapCreate : MonoBehaviour
             case 5:
                 return forestHillsHex;
             case 6:
-                //mountainHex.transform.Rotate(0f, 0f, (float)(((int)(Random.value * 6)) * 60), Space.Self);
                 return mountainHex;
             case 7:
                 return cityHex;

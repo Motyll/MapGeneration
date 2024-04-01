@@ -31,18 +31,64 @@ public class NoiseGenerator : MonoBehaviour{
         return value;
     }
 
-    public float[,] getNoiseMap(int seed, int amplifier, int scale){
-        float [,] map = new float[mapStats.width, mapStats.height];
+    public float[,] getNoiseMap(int seed, int amplifier, float scale){
+        float [,] map = new float[mapStats.radius * 4, mapStats.radius * 4];
         int xOffset = seed % 1000;
         int yOffset = seed / 1000 % 1000;
 
-        for(int x = 0; x < mapStats.width; x++){
-            for(int y = 0; y < mapStats.height; y++){
-                float xCoord = (float)x / mapStats.width * scale + xOffset;
-                float yCoord = (float)y / mapStats.height * scale + yOffset;
-                map[x,y] = Mathf.PerlinNoise(xCoord, yCoord) * amplifier;
+        for(int x = 0; x < mapStats.radius * 2 + 1; x++){
+            for(int y = 0; y < mapStats.radius * 2 + 1; y++){
+                float xCoord = (float)x / mapStats.radius * 2 * scale + xOffset;
+                float yCoord = (float)y / mapStats.radius * 2 * scale + yOffset;
+                map[x,y] = Mathf.PerlinNoise(xCoord, yCoord) * amplifier - 500;
             }
         }
+        return map;
+    }
+
+    public float[,] getWaterMap(int seed){
+        float [,] map = new float[mapStats.radius * 2 + 1, mapStats.radius * 2 + 1];
+        int xOffset = seed % 1000;
+        int yOffset = seed / 1000 % 1000;
+        float scale = mapStats.scale;
+
+        float octaveImpact = 1f;
+        for(int i = 0; i < mapStats.waterOctaves; i++){
+            for(int x = 0; x < mapStats.radius * 2 + 1; x++){
+                for(int y = 0; y < mapStats.radius * 2 + 1; y++){
+                    float xCoord = (float)x / mapStats.radius * 2 * scale + xOffset;
+                    float yCoord = (float)y / mapStats.radius * 2 * scale + yOffset;
+                    float val = ((Mathf.PerlinNoise(xCoord, yCoord) - 0.5f) * 2000 * octaveImpact) + mapStats.waterLevel;
+                    map[x, y] += val > 0 ? val * 10 : val / 2;
+                }
+            }
+            scale *= 2;
+            octaveImpact /= 2;
+        }
+        
+        return map;
+    }
+
+    public float[,] getForestMap(int seed){
+        float [,] map = new float[mapStats.radius * 2 + 1, mapStats.radius * 2 + 1];
+        int xOffset = seed % 2000;
+        int yOffset = seed / 1000 % 2000;
+        float scale = mapStats.forestScale;
+
+        float octaveImpact = 1f;
+        for(int i = 0; i < mapStats.forestOctaves; i++){
+            for(int x = 0; x < mapStats.radius * 2 + 1; x++){
+                for(int y = 0; y < mapStats.radius * 2 + 1; y++){
+                    float xCoord = (float)x / mapStats.radius * 2 * scale + xOffset;
+                    float yCoord = (float)y / mapStats.radius * 2 * scale + yOffset;
+                    float val = (Mathf.PerlinNoise(xCoord, yCoord) - 0.5f) * 20;
+                    map[x, y] += val + mapStats.forestAmmount;
+                }
+            }
+            scale *= 2;
+            octaveImpact /= 2;
+        }
+        
         return map;
     }
 

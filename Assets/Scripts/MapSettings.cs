@@ -4,10 +4,12 @@ using UnityEngine;
 public class MapSettings : ScriptableObject{
     public int radius;
     public int seed;
-    public int width;
-    public int height;
-    public int scale;
-    public float heightScale;
+    public float height;
+    public float scale;
+    public float waterLevel;
+    public float waterScale;
+    public int waterOctaves;
     public int forestAmmount;
-    public int forestScale;
+    public float forestScale;
+    public int forestOctaves;
 }
