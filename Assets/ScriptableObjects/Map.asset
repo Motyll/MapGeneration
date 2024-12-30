@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Map
   m_EditorClassIdentifier: 
   radius: 100
-  seed: 2147483647
+  seed: 73652542
   height: 0.5
   scale: 1
-  waterLevel: -10
-  waterScale: 0
+  waterLevel: -20
+  waterScale: 1
   waterOctaves: 8
   forestAmmount: 2
   forestScale: 8

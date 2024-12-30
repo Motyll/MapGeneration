@@ -8,10 +8,7 @@ public class HexMapCreate : MonoBehaviour
     public GameObject shallowWaterHex;
     public GameObject grassHex;
     public GameObject forestHex;
-    public GameObject hillsHex;
-    public GameObject forestHillsHex;
     public GameObject mountainHex;
-    public GameObject cityHex;
     public GameObject map;
     [SerializeField] public MapSettings mapStats;
 
@@ -21,9 +18,9 @@ public class HexMapCreate : MonoBehaviour
     }
 
     void LayoutGrid(){
-        float [,] population =  NoiseGenerator.Instance.getNoiseMap(89216308 / 2, 10000, mapStats.scale);
-        float [,] forest = NoiseGenerator.Instance.getForestMap(89216308 / 3);
-        float [,] water = NoiseGenerator.Instance.getWaterMap(89216308 / 4);
+        float [,] population =  NoiseGenerator.Instance.getNoiseMap(mapStats.seed / 2, 10000, mapStats.scale);
+        float [,] forest = NoiseGenerator.Instance.getForestMap(mapStats.seed / 3);
+        float [,] water = NoiseGenerator.Instance.getWaterMap(mapStats.seed / 4);
         float [,] ridge = NoiseGenerator.Instance.getRigdeMap(mapStats.seed);
 
         for(int r = -mapRadius; r <= mapRadius; r++){
@@ -41,26 +38,20 @@ public class HexMapCreate : MonoBehaviour
     }
 
     public void CreateTile(int r, int q, int elevation, int population, int forest, float ridge){
-        //Create Tile
         GameObject tile = Instantiate(hex, GetPositionForHex(new Vector2Int(r, q)), Quaternion.identity);
         tile.name = $"Hex[{r},{q}]";
         tile.transform.parent = map.transform;
 
-        //Seting stats for our Tile
         tile.GetComponent<TileLogic>().stats.coords_r = r;
         tile.GetComponent<TileLogic>().stats.coords_q = q;
-
         tile.GetComponent<TileLogic>().stats.elevation = elevation;
-        
         tile.GetComponent<TileLogic>().stats.population = population;
-
         TerrainType terrainType = SetTerrainType(elevation, population, forest, ridge);
         tile.GetComponent<TileLogic>().stats.terrain = terrainType;
         
         if(terrainType == TerrainType.DeepWater || terrainType == TerrainType.ShallowWater) 
             tile.GetComponent<TileLogic>().stats.population = 0;
         
-        //Geting terrain type
         GameObject terrain = Instantiate(GetHexStyle(terrainType), tile.transform);
         if (terrainType == TerrainType.Mountains)
             terrain.transform.position += new Vector3(0, 0, elevation > 0 ? mapStats.height * elevation/1000 - 0.4f + 1 : 1);
@@ -75,7 +66,6 @@ public class HexMapCreate : MonoBehaviour
         } else if(elevation <= 0){
             return TerrainType.ShallowWater;
         } else if (ridge < mapStats.mountainAmmount){
-            if(population > 9000) return TerrainType.SmallCityRuins;
             if(forest > 0) return TerrainType.Forest;
             return TerrainType.Grassland;
         } else {
@@ -94,21 +84,9 @@ public class HexMapCreate : MonoBehaviour
             case 3:
                 return forestHex;
             case 4:
-                return hillsHex;
-            case 5:
-                return forestHillsHex;
-            case 6:
                 return mountainHex;
-            case 7:
-                return cityHex;
-            case 8:
-                return cityHex;
-            case 9:
-                return cityHex;
-            case 10:
-                return cityHex;
             default:
-                return cityHex;
+                return grassHex;
         }
     }
 

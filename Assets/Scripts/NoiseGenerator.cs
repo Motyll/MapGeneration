@@ -4,8 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class NoiseGenerator : MonoBehaviour{
-    public float scale;
-
     [SerializeField] public MapSettings mapStats;
 
     private static NoiseGenerator _instance;
@@ -17,18 +15,6 @@ public class NoiseGenerator : MonoBehaviour{
         } else {
             _instance = this;
         }
-    }
-
-    public float CalculateFloat(int r, int q){
-        float scale = 60f;
-        int xOffset = mapStats.seed % 1000;
-        int yOffset = mapStats.seed / 1000 % 1000;
-        float xCoord = (float)r / 256 * scale + xOffset;
-        float yCoord = (float)q / 256 * scale + yOffset;
-
-        float value = Mathf.PerlinNoise(xCoord, yCoord);
-
-        return value;
     }
 
     public float[,] getNoiseMap(int seed, int amplifier, float scale){
@@ -50,7 +36,7 @@ public class NoiseGenerator : MonoBehaviour{
         float [,] map = new float[mapStats.radius * 2 + 1, mapStats.radius * 2 + 1];
         int xOffset = seed % 1000;
         int yOffset = seed / 1000 % 1000;
-        float scale = mapStats.scale;
+        float scale = mapStats.waterScale;
 
         float octaveImpact = 1f;
         for(int i = 0; i < mapStats.waterOctaves; i++){
@@ -58,7 +44,7 @@ public class NoiseGenerator : MonoBehaviour{
                 for(int y = 0; y < mapStats.radius * 2 + 1; y++){
                     float xCoord = (float)x / mapStats.radius * 2 * scale + xOffset;
                     float yCoord = (float)y / mapStats.radius * 2 * scale + yOffset;
-                    float val = ((Mathf.PerlinNoise(xCoord, yCoord) - 0.5f) * 2000 * octaveImpact) + mapStats.waterLevel;
+                    float val = ((Mathf.PerlinNoise(xCoord, yCoord) - 0.5f) * 1000 * octaveImpact) + mapStats.waterLevel;
                     map[x, y] += val > 0 ? val * 10 : val / 2;
                 }
             }

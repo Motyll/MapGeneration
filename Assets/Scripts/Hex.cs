@@ -14,10 +14,5 @@ public enum TerrainType {
     ShallowWater,
     Grassland,
     Forest,
-    Hills,
-    ForestHills,
-    Mountains,
-    Wasteland,
-    BigCityRuins,
-    SmallCityRuins,
+    Mountains
 }
